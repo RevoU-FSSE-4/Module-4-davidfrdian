@@ -8,6 +8,17 @@ const PersonalSchema = Yup.object().shape({
   dateOfBirth: Yup.date()
     .max(new Date(Date.now() - 567648000000), "You must be at least 18 years")
     .required("Required"),
+  streetAddress: Yup.string().required("Required"),
+  city: Yup.string().required("Required"),
+  state: Yup.string().required("Required"),
+  zipCode: Yup.string().required("Required").matches(/^\d{5}$/
+, "Please fill 5 number"  ),
+  username: Yup.string().required("Required"),
+  password: Yup.string()
+    .required("No password provided.")
+    .min(8, "Password is too short - should be 8 chars minimum.")
+    .matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$/,
+    'Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character'),
 });
 
 const initialValues = {
@@ -39,8 +50,9 @@ function PersonalForm() {
   const [fulFillOne, setFulFillOne] = useState("");
   const [fulFillTwo, setFulFillTwo] = useState("");
 
-  const handlesubmit = (values: FormData) => {
+  const handlesubmit = (values: FormData, ) => {
     alert(JSON.stringify(values, null, 10));
+
   };
 
   const handlePage1 = (props: FormikProps<FormData>) => {
@@ -168,8 +180,8 @@ function PersonalForm() {
                   <Field
                     id="zipCode"
                     name="zipCode"
-                    placeholder="Type your zipCode"
-                    type="text"
+                    placeholder="Type your zip code"
+                    type="number"
                   />
                   <ErrorMessage name="zipCode" component="div" />
 
@@ -189,6 +201,38 @@ function PersonalForm() {
                   >
                     Next Page
                   </button>
+                </div>
+              )}
+
+              {page === 3 && (
+                <div>
+                  <label htmlFor="username">Username</label>
+                  <Field
+                    id="username"
+                    name="username"
+                    placeholder="Type your username"
+                    type="text"
+                  />
+                  <ErrorMessage name="username" component="div" />
+
+                  <label htmlFor="password">Password</label>
+                  <Field
+                    id="password"
+                    name="password"
+                    placeholder="Type your password"
+                    type="password"
+                  />
+                  <ErrorMessage name="password" component="div" />
+
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setpage(page - 1);
+                    }}
+                  >
+                    Previous Page
+                  </button>
+                  <button type="submit">Submit Form</button>
                 </div>
               )}
             </Form>
