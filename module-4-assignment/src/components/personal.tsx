@@ -3,22 +3,34 @@ import { Formik, Field, Form, ErrorMessage, FormikProps } from "formik";
 import * as Yup from "yup";
 
 const PersonalSchema = Yup.object().shape({
-  fullName: Yup.string().min(3, "Too Short!").required("Required"),
+  fullName: Yup.string()
+    .min(3, "Please input your full name")
+    .required("Required")
+    .matches(/^(?:[A-Z][a-z]*\s*)+$/, "Please start your name with capital!"),
   email: Yup.string().email("Invalid email").required("Required"),
   dateOfBirth: Yup.date()
     .max(new Date(Date.now() - 567648000000), "You must be at least 18 years")
     .required("Required"),
-  streetAddress: Yup.string().required("Required"),
-  city: Yup.string().required("Required"),
-  state: Yup.string().required("Required"),
-  zipCode: Yup.string().required("Required").matches(/^\d{5}$/
-, "Please fill 5 number"  ),
-  username: Yup.string().required("Required"),
+  streetAddress: Yup.string()
+    .required("Required")
+    .min(5, "Your address is too short!").matches(/^(?:[A-Z][a-z]*\s*)+$/, "Please use capital for the street address"),
+  city: Yup.string()
+    .required("Required")
+    .matches(/^(?:[A-Z][a-z]*\s*)+$/, "Please use capital for the city"),
+  state: Yup.string()
+    .required("Required")
+    .matches(/^(?:[A-Z][a-z]*\s*)+$/, "Please use capital for the state"),
+  zipCode: Yup.string()
+    .required("Required")
+    .matches(/^\d{5}$/, "Please fill 5 number"),
+  username: Yup.string().required("Required").matches(/^(?=.*[0-9])[a-zA-Z0-9_-]{3,16}$/, "Please fill with letter and number, min 3 and max 16" ),
   password: Yup.string()
     .required("No password provided.")
     .min(8, "Password is too short - should be 8 chars minimum.")
-    .matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$/,
-    'Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character'),
+    .matches(
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$/,
+      "Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character"
+    ),
 });
 
 const initialValues = {
@@ -50,9 +62,8 @@ function PersonalForm() {
   const [fulFillOne, setFulFillOne] = useState("");
   const [fulFillTwo, setFulFillTwo] = useState("");
 
-  const handlesubmit = (values: FormData, ) => {
+  const handlesubmit = (values: FormData) => {
     alert(JSON.stringify(values, null, 10));
-
   };
 
   const handlePage1 = (props: FormikProps<FormData>) => {
@@ -89,17 +100,6 @@ function PersonalForm() {
     }
   };
 
-  switch (page) {
-    case 1:
-      break;
-
-    case 2:
-      break;
-
-    default:
-      break;
-  }
-
   return (
     <>
       <div>
@@ -109,37 +109,66 @@ function PersonalForm() {
           onSubmit={handlesubmit}
         >
           {(props) => (
-            <Form>
+            <Form className="flex justify-center">
               {page === 1 && (
-                <div>
-                  <p>{fulFillOne}</p>
-                  <label htmlFor="fullName">Full Name</label>
+                <div className="flex flex-col p-8 w-96  border-2 p-12 mt-10">
+                  <h1 className="text-2xl mb-6 text-center font-semibold">
+                    Personal Information
+                  </h1>
+                  <p className="text-red-500 text-center">{fulFillOne}</p>
+                  <label htmlFor="fullName" className="mt-4">
+                    Full Name
+                  </label>
                   <Field
                     id="fullName"
                     name="fullName"
                     placeholder="Type your name here"
+                    className="rounded-xl border-2 border-violet-500 px-2 py-1 focus:bg-violet-100 focus:outline-none"
                   />
-                  <ErrorMessage name="fullName" component="div" />
+                  <ErrorMessage
+                    name="fullName"
+                    component="div"
+                    className="text-red-500"
+                  />
 
-                  <label htmlFor="email">Email</label>
+                  <label htmlFor="email" className="mt-4">
+                    Email
+                  </label>
                   <Field
                     id="email"
                     name="email"
                     placeholder="example@gmail.com"
                     type="email"
+                    className="rounded-xl border-2 border-violet-500 px-2 py-1 focus:bg-violet-100 focus:outline-none"
                   />
 
-                  <ErrorMessage name="email" component="div" />
+                  <ErrorMessage
+                    name="email"
+                    component="div"
+                    className="text-red-500"
+                  />
 
-                  <label htmlFor="dateOfBirth">Date Of Birth</label>
-                  <Field id="dateOfBirth" name="dateOfBirth" type="date" />
-                  <ErrorMessage name="dateOfBirth" component="div" />
+                  <label htmlFor="dateOfBirth" className="mt-4">
+                    Date Of Birth
+                  </label>
+                  <Field
+                    id="dateOfBirth"
+                    name="dateOfBirth"
+                    type="date"
+                    className="rounded-xl border-2 border-violet-500 px-2 py-1 focus:bg-violet-100 focus:outline-none"
+                  />
+                  <ErrorMessage
+                    name="dateOfBirth"
+                    component="div"
+                    className="text-red-500"
+                  />
 
                   <button
                     type="button"
                     onClick={() => {
                       handlePage1(props);
                     }}
+                    className="bg-violet-700 p-2.5 rounded-xl text-white hover:bg-violet-200 hover:text-violet-900 hover:border-2 hover:border-violet-700 hover:font-bold mt-4 duration-150"
                   >
                     Next Page
                   </button>
@@ -147,92 +176,151 @@ function PersonalForm() {
               )}
 
               {page === 2 && (
-                <div>
-                  <p>{fulFillTwo}</p>
-                  <label htmlFor="streetAddress">Street Address</label>
+                <div className="flex flex-col p-8 w-96  border-2 p-12 mt-10">
+                  <h1 className="text-2xl mb-6 text-center font-semibold">
+                    Address Information
+                  </h1>
+                  <p className="text-red-500 text-center">{fulFillTwo}</p>
+                  <label htmlFor="streetAddress" className="mt-4">
+                    Street Address
+                  </label>
                   <Field
                     id="streetAddress"
                     name="streetAddress"
                     placeholder="Type your address"
                     type="text"
+                    className="rounded-xl border-2 border-violet-500 px-2 py-1 focus:bg-violet-100 focus:outline-none"
                   />
-                  <ErrorMessage name="streetAddress" component="div" />
+                  <ErrorMessage
+                    name="streetAddress"
+                    component="div"
+                    className="text-red-500"
+                  />
 
-                  <label htmlFor="city">City</label>
+                  <label htmlFor="city" className="mt-4">
+                    City
+                  </label>
                   <Field
                     id="city"
                     name="city"
                     placeholder="Type your city"
                     type="text"
+                    className="rounded-xl border-2 border-violet-500 px-2 py-1 focus:bg-violet-100 focus:outline-none"
                   />
-                  <ErrorMessage name="city" component="div" />
+                  <ErrorMessage
+                    name="city"
+                    component="div"
+                    className="text-red-500"
+                  />
 
-                  <label htmlFor="state">State</label>
+                  <label htmlFor="state" className="mt-4">
+                    State
+                  </label>
                   <Field
                     id="state"
                     name="state"
                     placeholder="Type your state"
                     type="text"
+                    className="rounded-xl border-2 border-violet-500 px-2 py-1 focus:bg-violet-100 focus:outline-none"
                   />
-                  <ErrorMessage name="state" component="div" />
+                  <ErrorMessage
+                    name="state"
+                    component="div"
+                    className="text-red-500"
+                  />
 
-                  <label htmlFor="zipCode">Zip Code</label>
+                  <label htmlFor="zipCode" className="mt-4">
+                    Zip Code
+                  </label>
                   <Field
                     id="zipCode"
                     name="zipCode"
                     placeholder="Type your zip code"
                     type="number"
+                    className="rounded-xl border-2 border-violet-500 px-2 py-1 focus:bg-violet-100 focus:outline-none"
                   />
-                  <ErrorMessage name="zipCode" component="div" />
-
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setpage(page - 1);
-                    }}
-                  >
-                    Previous Page
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      handlePage2(props);
-                    }}
-                  >
-                    Next Page
-                  </button>
+                  <ErrorMessage
+                    name="zipCode"
+                    component="div"
+                    className="text-red-500"
+                  />
+                  <div className="flex justify-evenly">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setpage(page - 1);
+                      }}
+                      className="bg-violet-700 p-2.5 rounded-xl text-white hover:bg-violet-200 hover:text-violet-900 hover:border-2 hover:border-violet-700 hover:font-bold mt-8 duration-150"
+                    >
+                      Previous Page
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        handlePage2(props);
+                      }}
+                      className="bg-violet-700 p-2.5 rounded-xl text-white hover:bg-violet-200 hover:text-violet-900 hover:border-2 hover:border-violet-700 hover:font-bold mt-8 duration-150"
+                    >
+                      Next Page
+                    </button>
+                  </div>
                 </div>
               )}
 
               {page === 3 && (
-                <div>
-                  <label htmlFor="username">Username</label>
+                <div className="flex flex-col p-8 w-96  border-2 p-12 mt-10">
+                  <h1 className="text-2xl mb-6 text-center font-semibold">
+                    Account Information
+                  </h1>
+                  <label htmlFor="username" className="mt-4">
+                    Username
+                  </label>
                   <Field
                     id="username"
                     name="username"
                     placeholder="Type your username"
                     type="text"
+                    className="rounded-xl border-2 border-violet-500 px-2 py-1 focus:bg-violet-100 focus:outline-none"
                   />
-                  <ErrorMessage name="username" component="div" />
+                  <ErrorMessage
+                    name="username"
+                    component="div"
+                    className="text-red-500"
+                  />
 
-                  <label htmlFor="password">Password</label>
+                  <label htmlFor="password" className="mt-4">
+                    Password
+                  </label>
                   <Field
                     id="password"
                     name="password"
                     placeholder="Type your password"
                     type="password"
+                    className="rounded-xl border-2 border-violet-500 px-2 py-1 focus:bg-violet-100 focus:outline-none"
                   />
-                  <ErrorMessage name="password" component="div" />
+                  <ErrorMessage
+                    name="password"
+                    component="div"
+                    className="text-red-500"
+                  />
 
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setpage(page - 1);
-                    }}
-                  >
-                    Previous Page
-                  </button>
-                  <button type="submit">Submit Form</button>
+                  <div className="flex justify-evenly">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setpage(page - 1);
+                      }}
+                      className="bg-violet-700 p-2.5 rounded-xl text-white hover:bg-violet-200 hover:text-violet-900 hover:border-2 hover:border-violet-700 hover:font-bold mt-8 duration-150"
+                    >
+                      Previous Page
+                    </button>
+                    <button
+                      type="submit"
+                      className="bg-violet-700 p-2.5 rounded-xl text-white hover:bg-violet-200 hover:text-violet-900 hover:border-2 hover:border-violet-700 hover:font-bold mt-8 duration-150"
+                    >
+                      Submit Form
+                    </button>
+                  </div>
                 </div>
               )}
             </Form>
@@ -244,44 +332,3 @@ function PersonalForm() {
 }
 
 export default PersonalForm;
-
-// export const PersonalForm = () => (
-//     <div>
-//       <h1>Personal Information</h1>
-//       <Formik
-//         initialValues={{
-//           fullName: "",
-//           email: "",
-//           dateOfBirth: "",
-//         }}
-//         validationSchema={PersonalSchema}
-//         onSubmit={(values, actions: any) => {
-//           console.log('Form submitted with values:', values);
-//         }}
-//       >
-//         {({ errors, touched }) => (
-//           <Form>
-//             <Field
-//               name="fullName"
-//               type="text"
-//               placeholder="Type your name here"
-//             />
-//             {errors.fullName && touched.fullName ? (
-//               <div>{errors.fullName}</div>
-//             ) : null}
-//             <Field
-//               name="email"
-//               type="email"
-//               placeholder="Type your email here"
-//             />
-//             {errors.email && touched.email ? <div>{errors.email}</div> : null}
-//             <Field name="dateOfBirth" type="date" />
-//             {errors.dateOfBirth && touched.dateOfBirth ? (
-//               <div>{errors.dateOfBirth}</div>
-//             ) : null}
-//             <button type="submit">Next Page</button>
-//           </Form>
-//         )}
-//       </Formik>
-//     </div>
-//   );
