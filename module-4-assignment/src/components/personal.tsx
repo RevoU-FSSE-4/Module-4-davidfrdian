@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Formik, Field, Form, ErrorMessage, FormikProps } from "formik";
 import * as Yup from "yup";
 
-const PersonalSchema = Yup.object().shape({
+const ValidationSchema = Yup.object().shape({
   fullName: Yup.string()
     .min(3, "Please input your full name")
     .required("Required")
@@ -57,7 +57,7 @@ interface FormData {
   password: string;
 }
 
-function PersonalForm() {
+function RegistrationForm() {
   const [page, setpage] = useState<number>(1);
   const [fulFillOne, setFulFillOne] = useState("");
   const [fulFillTwo, setFulFillTwo] = useState("");
@@ -105,7 +105,7 @@ function PersonalForm() {
       <div>
         <Formik
           initialValues={initialValues}
-          validationSchema={PersonalSchema}
+          validationSchema={ValidationSchema}
           onSubmit={handlesubmit}
         >
           {(props) => (
@@ -331,4 +331,4 @@ function PersonalForm() {
   );
 }
 
-export default PersonalForm;
+export default RegistrationForm;
