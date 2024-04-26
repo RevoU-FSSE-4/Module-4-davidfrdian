@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Formik, Field, Form, ErrorMessage, FormikProps } from "formik";
 import * as Yup from "yup";
-import Home from "./Home";
+import { useNavigate } from "react-router-dom";
 
 const ValidationSchema = Yup.object().shape({
   name: Yup.string()
@@ -33,10 +33,57 @@ interface FormData {
 function RegistrationForm() {
   const [page, setpage] = useState<number>(1);
   const [fulFillOne, setFulFillOne] = useState("");
+  const [name, setName] = useState<string>("");
+  const [email, setEmail] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
 
-  const handlesubmit = (values: FormData) => {
-    alert(JSON.stringify(values, null, 10));
-  };
+  const navigate = useNavigate();
+
+  // async function onSubmit(e: any) {
+  //   e.preventDefault();
+
+  //
+  async function handlesubmit(e: FormData) {
+    alert(JSON.stringify(e, null, 10));
+    setName(e.name);
+    setEmail(e.email)
+    setPassword(e.password)
+    navigate("/login");
+
+    const options = {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+          "name": name,
+          "email": email,
+          "password": password
+      })
+    };
+
+    try {
+      const response = await fetch(
+        "https://library-crud-sample.vercel.app/api/user/register",
+        options
+      );
+      // handle kalo error harus ngapain
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+
+      const data = await response.json();
+      console.log(data);
+
+      // next move
+      setTimeout(() => {
+        alert("Register Success");
+        navigate("/login");
+      }, 1000);
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  }
 
   const handlePage1 = (props: FormikProps<FormData>) => {
     if (
@@ -52,11 +99,19 @@ function RegistrationForm() {
     }
   };
 
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     const response = await fetch('https://library-crud-sample.vercel.app/api/user/profile');
+  //     const data = await response.json();
+  //     // Update component state with fetched data
+  //     console.log(data)
+  //   };
+
+  //   fetchData();
+  // }, []);
+
   return (
     <>
-      <div>
-        <Home />
-      </div>
       <div>
         <Formik
           initialValues={initialValues}

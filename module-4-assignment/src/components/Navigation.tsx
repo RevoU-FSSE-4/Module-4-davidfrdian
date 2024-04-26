@@ -1,14 +1,11 @@
 import { Link } from "react-router-dom";
 
-const Home = () => {
+const Navigation = () => {
   return (
     <nav className="flex justify-center">
       <ul className="flex flex-row justify-between gap-10 mt-5">
         <li>
-          <Link to="/">Home</Link>
-        </li>
-        <li>
-          <Link to="/register">Register</Link>
+          <Link to="/">Register</Link>
         </li>
         <li>
           <Link to="/login">Login</Link>
@@ -21,4 +18,4 @@ const Home = () => {
   );
 };
 
-export default Home;
+export default Navigation;
