@@ -1,7 +1,8 @@
-import { useState } from "react";
-import { Formik, Field, Form, ErrorMessage, FormikProps } from "formik";
+import React from "react";
+import { Formik, Field, Form, ErrorMessage, FormikHelpers } from "formik";
 import * as Yup from "yup";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const ValidationSchema = Yup.object().shape({
   name: Yup.string()
@@ -30,85 +31,26 @@ interface FormData {
   password: string;
 }
 
-function RegistrationForm() {
-  const [page, setpage] = useState<number>(1);
-  const [fulFillOne, setFulFillOne] = useState("");
-  const [name, setName] = useState<string>("");
-  const [email, setEmail] = useState<string>("");
-  const [password, setPassword] = useState<string>("");
+const RegistrationForm: React.FC = () => {
 
   const navigate = useNavigate();
 
-  // async function onSubmit(e: any) {
-  //   e.preventDefault();
-
-  //
-  async function handlesubmit(e: FormData) {
-    alert(JSON.stringify(e, null, 10));
-    setName(e.name);
-    setEmail(e.email)
-    setPassword(e.password)
-    navigate("/login");
-
-    const options = {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-          "name": name,
-          "email": email,
-          "password": password
-      })
-    };
-
+  const handleSubmit = async (
+    values: FormData,
+    actions: FormikHelpers<FormData>
+) => {
     try {
-      const response = await fetch(
-        "https://library-crud-sample.vercel.app/api/user/register",
-        options
-      );
-      // handle kalo error harus ngapain
-      if (!response.ok) {
-        throw new Error("Network response was not ok");
-      }
-
-      const data = await response.json();
-      console.log(data);
-
-      // next move
-      setTimeout(() => {
-        alert("Register Success");
-        navigate("/login");
-      }, 1000);
+        const response = await axios.post(
+            'https://library-crud-sample.vercel.app/api/user/register',
+            values
+        )
+        console.log(response.data)
+        navigate('/login')
+        actions.setSubmitting(false)
     } catch (error) {
-      console.error("Error:", error);
+        console.error('Error:', error)
     }
-  }
-
-  const handlePage1 = (props: FormikProps<FormData>) => {
-    if (
-      props.values.name &&
-      props.values.email &&
-      !props.errors.name &&
-      !props.errors.email
-    ) {
-      setFulFillOne("");
-      setpage(2);
-    } else {
-      setFulFillOne("Form Personal Information is Not Complete");
-    }
-  };
-
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     const response = await fetch('https://library-crud-sample.vercel.app/api/user/profile');
-  //     const data = await response.json();
-  //     // Update component state with fetched data
-  //     console.log(data)
-  //   };
-
-  //   fetchData();
-  // }, []);
+}
 
   return (
     <>
@@ -116,16 +58,13 @@ function RegistrationForm() {
         <Formik
           initialValues={initialValues}
           validationSchema={ValidationSchema}
-          onSubmit={handlesubmit}
+          onSubmit={handleSubmit}
         >
-          {(props) => (
             <Form className="flex justify-center">
-              {page === 1 && (
                 <div className="flex flex-col p-8 w-96  border-2 p-12 mt-10">
                   <h1 className="text-2xl mb-6 text-center font-semibold">
                     Register Your Account
                   </h1>
-                  <p className="text-red-500 text-center">{fulFillOne}</p>
                   <label htmlFor="fullName" className="mt-4">
                     Full Name
                   </label>
@@ -134,6 +73,7 @@ function RegistrationForm() {
                     name="name"
                     placeholder="Type your name here"
                     className="rounded-xl border-2 border-violet-500 px-2 py-1 focus:bg-violet-100 focus:outline-none"
+                    type= "text"
                   />
                   <ErrorMessage
                     name="name"
@@ -158,24 +98,6 @@ function RegistrationForm() {
                     className="text-red-500"
                   />
 
-                  <button
-                    type="button"
-                    onClick={() => {
-                      handlePage1(props);
-                    }}
-                    className="bg-violet-700 p-2.5 rounded-xl text-white hover:bg-violet-200 hover:text-violet-900 hover:border-2 hover:border-violet-700 hover:font-bold mt-4 duration-150"
-                  >
-                    Next Page
-                  </button>
-                </div>
-              )}
-
-              {page === 2 && (
-                <div className="flex flex-col p-8 w-96  border-2 p-12 mt-10">
-                  <h1 className="text-2xl mb-6 text-center font-semibold">
-                    Create your own password
-                  </h1>
-
                   <label htmlFor="password" className="mt-4">
                     Password
                   </label>
@@ -194,25 +116,17 @@ function RegistrationForm() {
 
                   <div className="flex justify-evenly">
                     <button
-                      type="button"
-                      onClick={() => {
-                        setpage(page - 1);
-                      }}
-                      className="bg-violet-700 p-2.5 rounded-xl text-white hover:bg-violet-200 hover:text-violet-900 hover:border-2 hover:border-violet-700 hover:font-bold mt-8 duration-150"
-                    >
-                      Previous Page
-                    </button>
-                    <button
                       type="submit"
                       className="bg-violet-700 p-2.5 rounded-xl text-white hover:bg-violet-200 hover:text-violet-900 hover:border-2 hover:border-violet-700 hover:font-bold mt-8 duration-150"
                     >
                       Submit Form
                     </button>
+                    <Link to = '/login'>
+                      Login Here
+                    </Link>
                   </div>
                 </div>
-              )}
             </Form>
-          )}
         </Formik>
       </div>
     </>
