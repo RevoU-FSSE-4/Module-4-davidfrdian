@@ -1,5 +1,12 @@
+import { useNavigate } from "react-router-dom";
 import { Formik, Field, Form, ErrorMessage } from "formik";
 import * as Yup from "yup";
+import axios from "axios";
+
+interface Login {
+  email: string;
+  password: string;
+}
 
 const ValidationSchema = Yup.object().shape({
   email: Yup.string().email("Invalid email").required("Required"),
@@ -17,24 +24,35 @@ const initialValues = {
   password: "",
 };
 
-interface FormData {
-  email: string;
-  password: string;
-}
+const LoginForm = () => {
+  const navigate = useNavigate();
 
-function LoginForm() {
-  const handlesubmit = (values: FormData) => {
-    alert(JSON.stringify(values, null, 10));
+  const handleSubmit = async (values: Login, { setSubmitting }: any) => {
+    try {
+      const response = await axios.post(
+        "https://library-crud-sample.vercel.app/api/user/login",
+        JSON.stringify(values)
+      );
+      console.log("Login successful:", response.data);
+
+      alert("Login Succes");
+      navigate("/category");
+    } catch (error) {
+      console.error("Login failed:", error);
+      alert("Login error");
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
     <>
-      <div>
-        <Formik
-          initialValues={initialValues}
-          validationSchema={ValidationSchema}
-          onSubmit={handlesubmit}
-        >
+      <Formik
+        initialValues={initialValues}
+        validationSchema={ValidationSchema}
+        onSubmit={handleSubmit}
+      >
+        {({ isSubmitting }) => (
           <Form className="flex justify-center">
             <div className="flex flex-col p-8 w-96  border-2 p-12 mt-10">
               <h1 className="text-2xl mb-6 text-center font-semibold">Login</h1>
@@ -72,15 +90,17 @@ function LoginForm() {
               />
               <button
                 type="submit"
+                disabled={isSubmitting}
                 className="bg-violet-700 p-2.5 rounded-xl text-white hover:bg-violet-200 hover:text-violet-900 hover:border-2 hover:border-violet-700 hover:font-bold mt-8 duration-150"
               >
-                Submit Form
+                {isSubmitting ? "Submitting..." : "Submit"}
               </button>
             </div>
           </Form>
-        </Formik>
-      </div>
+        )}
+      </Formik>
     </>
   );
-}
+};
+
 export default LoginForm;
