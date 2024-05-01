@@ -68,23 +68,24 @@ const CategoryForm: React.FC = () => {
     }
 
     return (
-        <Formik
+        <Formik 
             enableReinitialize={true}
             initialValues={formValues}
             validationSchema={validationSchema}
             onSubmit={handleSubmit}
             validateOnChange={true}
+            
         >
             {({ values, isSubmitting }) => (
-                <Form>
-                    <div className="mt-3">
+                <Form className='bg-white'>
+                    <div className="mt-3 ">
                         <Label htmlFor="category_name">Name</Label>
                         <Field
                             type="text"
                             id="category_name"
                             name="category_name"
                             value={values.category_name}
-                            className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+                            className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1         focus:ring-violet-700 focus:bg-violet-100 :cursor-not-allowed disabled:opacity-50 my-2"
                             placeholder="Enter category name"
                         />
                         <ErrorMessage
@@ -102,7 +103,8 @@ const CategoryForm: React.FC = () => {
                             type="text"
                             id="category_description"
                             name="category_description"
-                            className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+                            className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 
+                            focus:ring-violet-700 focus:bg-violet-100 disabled:cursor-not-allowed disabled:opacity-50 my-2"
                             placeholder="Enter category description"
                         />
                         <ErrorMessage
@@ -111,17 +113,10 @@ const CategoryForm: React.FC = () => {
                             className="text-xs text-red-500"
                         />
                     </div>
-                    <div className="mt-3 flex items-center">
-                        <Label htmlFor="is_active">Active</Label>
-                        <Field
-                            type="checkbox"
-                            id="is_active"
-                            name="is_active"
-                            className="ml-2 size-4"
-                        />
-                    </div>
-                    <div className="mt-3 flex justify-end">
-                        <Button type="submit" disabled={isSubmitting}>
+       
+                    <div className="mt-6 flex justify-end ">
+                        <Button 
+                        className='hover:bg-violet-900 hover:text-slate-100 duration-300' type="submit" disabled={isSubmitting}>
                             {isSubmitting ? (
                                 <>
                                     <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />

@@ -77,8 +77,8 @@ const Categories: React.FC = () => {
         <div className="mt-20 flex max-h-full items-center justify-center overflow-scroll">
             <div>
                 <CategoryDialog>
-                    <Button className="mb-2" variant={'outline'}>
-                        <PlusIcon className="mr-2 h-4 w-4 " /> Category
+                    <Button className="mb-2 hover:text-slate-100 hover:bg-violet-900 duration-300" variant={'outline'}>
+                        <PlusIcon className="mr-2 h-4 w-4  " /> Category
                     </Button>
                 </CategoryDialog>
 
@@ -101,7 +101,7 @@ const Categories: React.FC = () => {
                                 </div>
                                 <div className="flex gap-1">
                                     <CategoryDialog>
-                                        <Button
+                                        <Button className='hover:text-slate-100 hover:bg-violet-900 duration-300'
                                             variant="outline"
                                             size="icon-sm"
                                             onClick={() =>
@@ -114,7 +114,7 @@ const Categories: React.FC = () => {
                                         </Button>
                                     </CategoryDialog>
 
-                                    <Button
+                                    <Button className='hover:text-slate-100 hover:bg-violet-900 duration-300'
                                         variant="destructive"
                                         size="icon-sm"
                                         onClick={() =>

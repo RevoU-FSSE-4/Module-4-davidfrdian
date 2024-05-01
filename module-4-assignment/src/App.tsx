@@ -7,11 +7,13 @@ import RegistrationForm from "./components/Register";
 import { NotFound } from "./components/NotFound";
 import PrivateRoute from "./Route/PrivateRoute";
 import Categories from "./components/Categories";
+import Navigation from "./components/Navigation";
 
 
 function App() {
   return (
     <div>
+      <Navigation/>
       <Header/>
       <Routes>
         <Route path="/" element={<LoginForm />}></Route>
