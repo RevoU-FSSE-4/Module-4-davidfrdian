@@ -1,27 +1,27 @@
 import React from "react";
 import "./App.css";
 import { Routes, Route } from "react-router-dom";
-import Navigation from "./components/Navigation";
+import Header from "./components/Header";
 import LoginForm from "./components/Login";
 import RegistrationForm from "./components/Register";
 import { NotFound } from "./components/NotFound";
 import PrivateRoute from "./Route/PrivateRoute";
-import Category from "./components/Category";
+import Categories from "./components/Categories";
+
 
 function App() {
-
   return (
     <div>
-      <Navigation />
+      <Header/>
       <Routes>
-        <Route path="/login" element={<LoginForm />}></Route>
-        <Route path="/" element={<RegistrationForm />}></Route>
-        <Route path="/" element={<PrivateRoute/>}>
-          <Route path="/category" element={<Category/>}/>
+        <Route path="/" element={<LoginForm />}></Route>
+        <Route path="/registration" element={<RegistrationForm />}></Route>
+        <Route path="/" element={<PrivateRoute />}>
+          <Route path="/categories" element={<Categories />} />
         </Route>
         <Route path="/*" element={<NotFound />}></Route>
       </Routes>
-      </div>
+    </div>
   );
 }
 

@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { Skeleton } from '../GUI/Skeleton'
 
 interface UserData {
     name: string
@@ -41,7 +42,8 @@ const UserProfile = () => {
                 </div>
             ) : (
                 <div className="flex flex-col gap-1">
-     <p>null</p>
+                    <Skeleton className="h-4 w-32" />
+                    <Skeleton className="h-4 w-36" />
                 </div>
             )}
         </div>

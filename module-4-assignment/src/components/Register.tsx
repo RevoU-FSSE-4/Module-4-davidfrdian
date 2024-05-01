@@ -1,5 +1,5 @@
 import React from "react";
-import { Formik, Form, Field, ErrorMessage, FormikHelpers } from "formik";
+import { Formik, Form, Field, ErrorMessage } from "formik";
 import axios from "axios";
 import * as Yup from "yup";
 import { useNavigate } from "react-router-dom";
@@ -34,23 +34,25 @@ const RegistrationForm: React.FC = () => {
       ),
   });
 
-  const handleSubmit = async (
-    values: FormData,
-    actions: FormikHelpers<FormData>
-  ) => {
+  const handleSubmit = async (values: FormData, { setSubmitting }: any) => {
     try {
       const response = await axios.post(
         "https://library-crud-sample.vercel.app/api/user/register",
-        JSON.stringify(FormData)
+        {
+          name: values.name,
+          email: values.email,
+          password: values.password,
+        }
       );
       console.log(response.data);
-      navigate("/login");
+
       alert("Your Registration Success!");
-      actions.setSubmitting(false);
+      navigate("/login");
     } catch (error) {
       alert("Registration Error");
       console.error("Error:", error);
-      actions.setSubmitting(false);
+    } finally {
+      setSubmitting(false);
     }
   };
 

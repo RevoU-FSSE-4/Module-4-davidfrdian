@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { Formik, Field, Form, ErrorMessage } from "formik";
 import * as Yup from "yup";
-import axios from "axios";
+
 
 interface Login {
   email: string;
@@ -29,18 +29,24 @@ const LoginForm = () => {
 
   const handleSubmit = async (values: Login, { setSubmitting }: any) => {
     try {
-      const response = await axios.post(
+      const response = await fetch(
         "https://library-crud-sample.vercel.app/api/user/login",
-        JSON.stringify(values)
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(values),
+        }
       );
-      console.log("Login successful:", response.data);
-
-      alert("Login Succes");
-      navigate("/category");
+      const data = await response.json();
+      console.log(data);
+      if (response.ok) {
+        localStorage.setItem("token", data.token);
+        navigate("/categories");
+      }
     } catch (error) {
-      console.error("Login failed:", error);
-      alert("Login error");
-    } finally {
+      console.error("Login error:", error);
       setSubmitting(false);
     }
   };
